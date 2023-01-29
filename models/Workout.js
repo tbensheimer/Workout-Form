@@ -9,7 +9,7 @@ const workoutSchema = new Schema({
     },
     load: {
         type: Number,
-        required: tmongoose.rusted,
+        required: true,
     },
     reps: {
         type: Number,
