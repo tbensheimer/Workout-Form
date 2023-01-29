@@ -1,4 +1,4 @@
-import Workout from "../models/Workout"
+const Workout = require("../models/Workout");
 
 const getAllWorkouts = (req, res) => {
 const workouts = Workout.find()
