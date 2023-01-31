@@ -3,10 +3,13 @@ import WorkoutDetails from "../components/WorkoutDetails";
 import WorkoutForm from "../components/WorkoutForm";
 import { useSelector, useDispatch } from "react-redux";
 import { setWorkouts } from "../features/workoutSlice";
+import EditForm from "../components/EditForm";
 
 export default function Home() {
 
 const workouts = useSelector(state => state.workouts);
+const isEdit = useSelector(state => state.isEdit);
+const workout = useSelector(state => state.workoutInfoForEdit);
 const dispatch = useDispatch();
 
 useEffect(() => {
@@ -16,7 +19,6 @@ const fetchWorkouts = async () => {
 
     if(response.ok) {
         dispatch(setWorkouts(data));
-        console.log(data);
     }
 }
     fetchWorkouts();
@@ -31,8 +33,9 @@ const fetchWorkouts = async () => {
                   return <WorkoutDetails key={workout._id} workout={workout} />
                 })}
             </div>
-            <WorkoutForm />
-        </div>
+            {!isEdit && <WorkoutForm />}
+            {isEdit && <EditForm workout={workout} />}        
+            </div>
         </>
     )
 }
