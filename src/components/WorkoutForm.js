@@ -1,4 +1,6 @@
 import {useState} from "react";
+import { useDispatch } from "react-redux";
+import { createWorkout } from "../features/workoutSlice";
 
 export default function WorkoutForm() {
 
@@ -6,6 +8,7 @@ const [title, setTitle] = useState("");
 const [load, setLoad] = useState("");
 const [reps, setReps] = useState("");
 const [error, setError] = useState("");
+const dispatch = useDispatch();
 
 const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +30,7 @@ const handleFormSubmit = async (e) => {
 
     if(response.ok) {
         setError(null);
+        dispatch(createWorkout(data))
         console.log("new workout added", data);
         setTitle("");
         setLoad("");
@@ -41,7 +45,7 @@ return (<>
     <input id="title" type="text" onChange={(e) => setTitle(e.target.value)} value={title} />
     <label htmlFor="load">Load (in Kg):</label>
     <input type="number" id="load" onChange={(e) => setLoad(e.target.value)} value={load} />
-    <lable htmlFor="reps">Reps: </lable>
+    <label htmlFor="reps">Reps: </label>
     <input id="reps" type="number" onChange={(e) => setReps(e.target.value)} value={reps} />
     <button>Add Workout</button>
 </form>
