@@ -1,29 +1,47 @@
 import {createSlice, configureStore} from "@reduxjs/toolkit";
 
-const workoutSlice = createSlice({
+const WorkoutSlice = createSlice({
     name: "workout",
     initialState: {
-        workouts: []
+        workouts: [],
+        isEdit: false,
+        workoutInfoForEdit: {}
     },
     reducers: {
         createWorkout: (state, action) => {
-            state.workouts = [...state.workouts, action.payload];
+            state.workouts.unshift(action.payload);
         },
         deleteWorkout: (state, action) => {
-            state.workouts = state.workouts.filter(workout =>{
-                return workout._id != action.payload._id;
+            const index = state.workouts.findIndex(workout => workout._id == action.payload._id);
+            state.workouts.splice(index, 1);
+        },
+        updateWorkout: (state, action) => {
+            const actionIndex = state.workouts.findIndex(workout => workout._id == action.payload._id);
+
+           const updatedArray = state.workouts.map((workout, index) => {
+                if(index == actionIndex) {
+                    return {...workout, ...action.payload};
+                }
+                return workout;
             })
+            state.workouts = updatedArray;
         },
         setWorkouts: (state, action) => {
-            state.workouts = action.payload;
+         state.workouts = action.payload;
+        },
+        toggleEdit: (state) => {
+            state.isEdit = !state.isEdit;
+        },
+        getWorkoutDetails: (state, action) => {
+            state.workoutInfoForEdit =  action.payload;
         }
     }
 })
 
 const store = configureStore({
-    reducer: workoutSlice.reducer
+    reducer: WorkoutSlice.reducer
 })
 
-const {createWorkout, deleteWorkout, setWorkouts} = workoutSlice.actions;
+const {createWorkout, deleteWorkout, setWorkouts, toggleEdit, getWorkoutDetails, updateWorkout} = WorkoutSlice.actions;
 
-export {store, createWorkout, deleteWorkout, setWorkouts}
+export {store, createWorkout, deleteWorkout, setWorkouts, toggleEdit, getWorkoutDetails, updateWorkout}
