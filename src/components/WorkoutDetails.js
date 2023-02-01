@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux"
 import { deleteWorkout, toggleEdit, getWorkoutDetails } from "../features/workoutSlice";
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 export default function WorkoutDetails({workout}) {
     const dispatch = useDispatch();
@@ -27,9 +28,9 @@ export default function WorkoutDetails({workout}) {
             <h4 className="workout-title">{workout.title}</h4>
             <p><strong>Load (kg):</strong> {workout.load}</p>
             <p><strong>Reps: </strong> {workout.reps}</p>
-            <p>{workout.createdAt}</p>
-            <button class="edit" type="button" onClick={handleEditClick}>edit</button>
-            <button class="delete" type="button" onClick={handleDeleteClick}>delete</button>
+            <p>{formatDistanceToNow(new Date(workout.createdAt), {suffix: true})} ago</p>
+            <button className="edit" type="button" onClick={handleEditClick}>edit</button>
+            <button className="delete" type="button" onClick={handleDeleteClick}>delete</button>
         </div>
     )
 }
