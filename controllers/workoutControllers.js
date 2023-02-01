@@ -30,6 +30,19 @@ const getWorkoutDetails = async (req, res) => {
 
 const createWorkout = async (req, res) => {
     const {title, load, reps} = req.body;
+    let emptyFields = [];
+    if(!title) {
+        emptyFields.push('title');
+    }
+    if(!load) {
+        emptyFields.push('load');
+    }
+    if(!reps) {
+        emptyFields.push('reps');
+    }
+    if(emptyFields.length > 0) {
+        return res.status(400).json({error: "Please fill in the fields", emptyFields});
+    }
 try {
     const workout = await Workout.create({title, load, reps});
     res.status(200).json(workout)
@@ -46,13 +59,26 @@ const updatedBody = req.body;
 if(!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({error: "No such workout with given Id"});
 }
+let emptyFields = [];
+    if(!updatedBody.title) {
+        emptyFields.push('title');
+    }
+    if(!updatedBody.load) {
+        emptyFields.push('load');
+    }
+    if(!updatedBody.reps) {
+        emptyFields.push('reps');
+    }
+    if(emptyFields.length > 0) {
+        return res.status(400).json({error: "Please fill in the fields", emptyFields});
+    }
 const workout = await Workout.findByIdAndUpdate(id, updatedBody)
 
 if(workout) {
     res.status(200).json(workout);
 }
 else {
-    res.status(400).json({error: "There was an error updating the workout"});
+    res.status(400).json({error: "There was an error updating the workout", emptyFields});
 }
 }
 
