@@ -8,6 +8,7 @@ const [title, setTitle] = useState("");
 const [load, setLoad] = useState("");
 const [reps, setReps] = useState("");
 const [error, setError] = useState("");
+const [emptyFields, setEmptyFields] = useState([]);
 const dispatch = useDispatch();
 const workoutInfo = {_id: workout._id, title, load, reps};
 
@@ -30,11 +31,13 @@ const handleEditFormSubmit = async (e) => {
     const data = await response.json();
 
     if(!response.ok) {
-        setError(json.error);
+        setError(data.error);
+        setEmptyFields(data.emptyFields);
     }
 
     if(response.ok) {
         setError(null);
+        setEmptyFields([]);
         dispatch(updateWorkout(workoutInfo))
         setTitle("");
         setLoad("");
@@ -48,16 +51,16 @@ return (<>
 <form className="create" onSubmit={handleEditFormSubmit} >
     <h3>Update Workout</h3>
     <label htmlFor="title">Exercise Title:</label>
-    <input id="title" type="text" onChange={(e) => setTitle(e.target.value)} value={title} />
+    <input className={emptyFields.includes('title') ? "error" : ""} id="title" type="text" onChange={(e) => setTitle(e.target.value)} value={title} />
     <label htmlFor="load">Load (in Kg):</label>
-    <input type="number" id="load" onChange={(e) => setLoad(e.target.value)} value={load} />
+    <input className={emptyFields.includes('load') ? "error" : ""} type="number" id="load" onChange={(e) => setLoad(e.target.value)} value={load} />
     <label htmlFor="reps">Reps: </label>
-    <input id="reps" type="number" onChange={(e) => setReps(e.target.value)} value={reps} />
+    <input className={emptyFields.includes('reps') ? "error" : ""} id="reps" type="number" onChange={(e) => setReps(e.target.value)} value={reps} />
     <button>Update Workout</button>
-    <button type="button" onClick={() => dispatch(toggleEdit())}>Cancel</button>
+    <button className="cancel" type="button" onClick={() => dispatch(toggleEdit())}>Cancel</button>
+    {error && <div className="error">{error}</div>}
 </form>
 
-{error && <div className={error}>{error}</div>}
 
 </>)
 
