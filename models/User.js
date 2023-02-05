@@ -6,12 +6,12 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     email: {
-        String: true,
+        type: String,
         required: true,
         unique: true,
     },
     password: {
-        String: true,
+        type: String,
         required: true
     }
 })
@@ -42,6 +42,26 @@ const user = await this.create({email, password: hashed});
 
 return user;
 
+}
+
+userSchema.statics.login = async (email, password) => {
+    if(!email || !password) {
+        throw Error("Please fill all fields");
+    }
+
+    const user = await User.findOne({email});
+
+    if(!user) {
+        throw Error("Wrong email or password");
+    }
+
+    match = await bcrypt.compare(password, user.password);
+
+    if(!match) {
+        throw Error("Wrong email or password");
+    }
+
+    return user;
 }
 
 
