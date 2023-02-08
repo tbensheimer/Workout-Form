@@ -1,9 +1,12 @@
-const { json } = require('express');
 const express = require('express');
 const Workout = require('../models/Workout');
 const workoutController = require('../controllers/workoutControllers');
+const requireAuth = require('../middleware/requireAuth');
+
 
 const router = express.Router();
+
+router.use(requireAuth);
 
 router.get('/', workoutController.getAllWorkouts);
 
