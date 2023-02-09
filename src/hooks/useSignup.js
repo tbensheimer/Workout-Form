@@ -1,17 +1,17 @@
 import {useState} from "react";
-import {useContext} from "./useAuthContext";
+import {useDispatch} from "react-redux";
+import { login } from "../features/workoutSlice";
 
-export default function useSignout() {
+export function useSignup() {
 const [error, setError] = useState(null);
 const [loading, setLoading] =useState(false);
-const {dispatch} = useContext();
+const dispatch = useDispatch();
 
 const signup = async (email, password) => {
-
 setLoading(true);
 setError(null);
 
-const response = await fetch("/api/user/signup", {
+const response = await fetch("/api/users/signupUser", {
     method: "POST",
     headers: {
         "Content-Type": "application/json"
@@ -28,12 +28,11 @@ if(!response.ok) {
 if(response.ok) {
     setLoading(false);
     localStorage.setItem('user', JSON.stringify(data))
-    dispatch({type: "LOGIN", payload: data})
+    dispatch(login(data));
 }
 
+}
 return {loading, error, signup }
 
 }
 
-
-}
