@@ -1,13 +1,14 @@
-import {useAuthContext} from "./useAuthContext";
+import {useDispatch} from "react-redux";
+import { logout, setWorkouts } from "../features/workoutSlice";
 
-export default function useLogout() {
-    const {dispatch} = useAuthContext();
-
-    const logout = () => {
+export function useLogout() {
+const dispatch = useDispatch();
+    const Logout = () => {
         localStorage.removeItem('user')
 
-        dispatch({type: "LOGOUT"})
+        dispatch(logout);
+        dispatch(setWorkouts(null));
     }
 
-    return {logout}
+    return {Logout}
 }
