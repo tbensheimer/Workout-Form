@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import { useDispatch} from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 import {toggleEdit, getWorkoutDetails, updateWorkout } from "../features/workoutSlice";
 
 export default function EditForm({workout}) {
@@ -10,21 +10,28 @@ const [reps, setReps] = useState("");
 const [error, setError] = useState("");
 const [emptyFields, setEmptyFields] = useState([]);
 const dispatch = useDispatch();
+const user = useSelector(state => state.user);
 const workoutInfo = {_id: workout._id, title, load, reps};
 
 useEffect(() => {
     setTitle(workout.title);
     setLoad(workout.load);
     setReps(workout.reps);
-}, [])
+}, [getWorkoutDetails])
 
 const handleEditFormSubmit = async (e) => {
     e.preventDefault();
 
+    if(!user) {
+        setError("You must be logged in");
+        return;
+    }
+
     const response = await fetch("/api/workouts/" + workout._id , {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${user.token}`
         },
         body: JSON.stringify(workoutInfo)
     })
